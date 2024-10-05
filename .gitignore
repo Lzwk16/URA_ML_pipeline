@@ -5,3 +5,7 @@ __pycache__/
 postgres_data/
 data/
 db-data/
+*.csv
+# Flask stuff:
+instance/
+.webassets-cache

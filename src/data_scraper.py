@@ -1,143 +1,150 @@
+import logging
 import os
+import sys
 from datetime import datetime
 
 import psycopg2
 import requests
+import yaml
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv('.env')
-
-# Base API URL
-api_url_base = "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch="
-
-# Database credentials
-db_name = os.getenv('POSTGRES_DB')
-user_name = os.getenv('POSTGRES_USER')
-password = os.getenv('POSTGRES_PASSWORD')
-
-# API credentials
-access_key = os.getenv('ACCESS_KEY')
-token = os.getenv('TOKEN')
-
-# Set up headers for the API request
-headers = {
-    "AccessKey": access_key,
-    "Token": token,
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-}
-
-
-def fetch_data_for_batch(batch_no):
-    """Fetch data from the API for a specific batch number."""
-    api_url = api_url_base + str(batch_no)
+sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
+class DataScraper:
+    """Fetch data from API and insert it into the PostgreSQL database."""
     
-    try:
-        response = requests.get(api_url, headers=headers, verify=True)
-        if response.status_code == 200:
-            try:
-                data = response.json()
-                results = data.get('Result', [])
-                if results:
-                    print(f"Batch {batch_no} - Sample project data:", results[0])  # Print the first project
-                    print(f"Batch {batch_no} - Sample transaction data:", results[0].get("transaction", []))  # Print first transaction
-                else:
-                    print(f"Batch {batch_no}: No projects found in results")
-                return results
-            except ValueError as e:
-                raise RuntimeError(f"Batch {batch_no}: Error parsing JSON: {e}")
+    def __init__(self, config_file='config.yaml'):
+        # Load environment variables from .env file
+        load_dotenv('.env')
+        
+        self.load_config(config_file)
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(logging.INFO)
+        self.headers = {
+            "AccessKey": os.getenv('ACCESS_KEY'),
+            "Token": os.getenv('TOKEN'),
+            "User-Agent": self.config['ura_api']['user_agent'],
+        }
     
-    except requests.RequestException as e:
-        raise ConnectionError(f"Batch {batch_no}: Request failed: {e}")
+    def load_config(self, config_file):
+        """Load configuration from a YAML file."""
+        with open(config_file, 'r') as file:
+            self.config = yaml.safe_load(file)
 
-def insert_data_into_db(results):
-    """Insert project and transaction data into the PostgreSQL database."""
-    try:
-        conn = psycopg2.connect(
-            host="localhost",
-            port="5433",  # Ensure this matches your Docker mapping
-            database=db_name,
-            user=user_name,
-            password=password
-        )
-        print("Connected to the PostgreSQL database!")
-    except psycopg2.Error as e:
-        raise ConnectionError(f"Unable to connect to the database: {e}")
+    def fetch_data_for_batch(self, batch_no):
+        """Fetch data from the API for a specific batch number."""
+        api_url = f"{self.config['ura_api']['endpoint']}{batch_no}"
 
-    cursor = conn.cursor()
+        try:
+            response = requests.get(
+                api_url, 
+                headers=self.headers, 
+                verify=self.config['ura_api']['verify_ssl']
+            )
+            if response.status_code == 200:
+                try:
+                    data = response.json()
+                    results = data.get('Result', [])
+                    if results:
+                        # print the first private property project
+                        self.logger.info(f"Batch {batch_no} - Sample project data:", results[0])
+                        # print first transaction  
+                        self.logger.info(f"Batch {batch_no} - Sample transaction data:", results[0].get("transaction", []))  
+                    else:
+                        self.logger.info(f"Batch {batch_no}: No projects found in results")
+                    return results
+                except ValueError as e:
+                    raise RuntimeError(f"Batch {batch_no}: Error parsing JSON: {e}")
 
-    # Iterate through each project in results
-    for project in results:
-        cursor.execute("""
-            INSERT INTO projects (project_name, market_segment, street, x_coordinate, y_coordinate)
-            VALUES (%s, %s, %s, %s, %s)
-            RETURNING id
-        """, (
-            project["project"],
-            project["marketSegment"],
-            project["street"],
-            project.get("x", None),
-            project.get("y", None)
-        ))
+        except requests.RequestException as e:
+            raise ConnectionError(f"Batch {batch_no}: Request failed: {e}")
 
-        project_id = cursor.fetchone()[0]  # Get the generated project ID
-        print(f"Inserted project with ID: {project_id}")
+    def insert_data_into_db(self, results):
+        """Insert project and transaction data into the PostgreSQL database."""
+        try:
+            conn_params = {
+                'host': self.config['database']['host'],
+                'port': self.config['database']['port'],
+                'database': self.config['database']['name'],
+                'user': os.getenv('POSTGRES_USER'),
+                'password': os.getenv('POSTGRES_PASSWORD'),
+            }
+            with psycopg2.connect(**conn_params) as conn:
+                self.logger.info("Connected to the PostgreSQL database!")
+                with conn.cursor() as cursor:
+                    for project in results:
+                        cursor.execute("""
+                            INSERT INTO projects (
+                                project_name, 
+                                market_segment, 
+                                street, 
+                                x_coordinate, 
+                                y_coordinate
+                            )
+                            VALUES (%s, %s, %s, %s, %s)
+                            RETURNING id
+                        """, (
+                            project["project"],
+                            project["marketSegment"],
+                            project["street"],
+                            project.get("x", None),
+                            project.get("y", None)
+                        ))
+                        project_id = cursor.fetchone()[0]
+                        self.logger.info(f"Inserted project with ID: {project_id}")
 
-        # Iterate through each transaction for the current project
-        for transaction in project["transaction"]:
-            # Convert contractDate to a date format
-            month = transaction['contractDate'][:2]
-            year = "20" + transaction['contractDate'][2:]  # Assuming all years are in the 2000s
-            transaction_date = datetime.strptime(f"{year}-{month}-01", "%Y-%m-%d").date()
+                        for transaction in project["transaction"]:
+                            month = transaction['contractDate'][:2]
+                            year = "20" + transaction['contractDate'][2:]
+                            transaction_date = datetime.strptime(
+                                f"{year}-{month}-01", 
+                                "%Y-%m-%d"
+                            ).date()
 
-            cursor.execute("""
-                INSERT INTO private_property_transactions (
-                    project_id, 
-                    transaction_date, 
-                    area, 
-                    price, 
-                    property_type, 
-                    tenure, 
-                    type_of_area, 
-                    floor_range, 
-                    type_of_sale, 
-                    district, 
-                    no_of_units
-                )
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
-            """, (
-                project_id,
-                transaction_date,
-                float(transaction['area']),
-                float(transaction['price']),
-                transaction['propertyType'],
-                transaction['tenure'],
-                transaction['typeOfArea'],
-                transaction['floorRange'],
-                transaction['typeOfSale'],
-                transaction['district'],
-                int(transaction['noOfUnits']),
-            ))
+                            cursor.execute("""
+                                INSERT INTO private_property_transactions (
+                                    project_id, 
+                                    transaction_date, 
+                                    area, 
+                                    price, 
+                                    property_type, 
+                                    tenure, 
+                                    type_of_area, 
+                                    floor_range, 
+                                    type_of_sale, 
+                                    district, 
+                                    no_of_units
+                                )
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                            """, (
+                                project_id,
+                                transaction_date,
+                                float(transaction['area']),
+                                float(transaction['price']),
+                                transaction['propertyType'],
+                                transaction['tenure'],
+                                transaction['typeOfArea'],
+                                transaction['floorRange'],
+                                transaction['typeOfSale'],
+                                transaction['district'],
+                                int(transaction['noOfUnits']),
+                            ))
+                    conn.commit()
+                    self.logger.info("Data inserted successfully!")
+        except psycopg2.Error as e:
+            raise ConnectionError(f"Unable to connect to the database: {e}")
 
-    conn.commit()
-    print("Data inserted successfully!")
-
-    # Close the connection
-    cursor.close()
-    conn.close()
-
-
-def run():
-    """Main function to download data from all batches (1-4) and insert into the database."""
-    for batch_no in range(1, 5):  # Loop through batch numbers 1 to 4
-        print(f"Fetching data for batch {batch_no}...")
-        results = fetch_data_for_batch(batch_no)
-        if results:
-            print(f"Inserting data for batch {batch_no} into the database...")
-            insert_data_into_db(results)
-        else:
-            print(f"No data to insert for batch {batch_no}.")
-
+    def run(self):
+        """Main function to download data from all specified batches and insert into the database."""
+        for batch_no in range(self.config['batches']['range'][0], self.config['batches']['range'][1] + 1):
+            self.logger.info(f"Fetching data for batch {batch_no}...")
+            results = self.fetch_data_for_batch(batch_no)
+            if results:
+                self.logger.info(f"Inserting data for batch {batch_no} into the database...")
+                self.insert_data_into_db(results)
+            else:
+                self.logger.info(f"No data to insert for batch {batch_no}.")
 
 if __name__ == "__main__":
-    run()
+    logging.info("Starting DataScraper...")
+    pipeline = DataScraper()
+    pipeline.run()

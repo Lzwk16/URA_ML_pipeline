@@ -1,9 +1,13 @@
 ura_api:
-  endpoint: "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch=1"
-
+  endpoint: "https://www.ura.gov.sg/uraDataService/invokeUraDS?service=PMI_Resi_Transaction&batch="
+  user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+  verify_ssl: true
 database:
-  host: "localhost"
-  user: "${POSTGRES_USER}"
-  password: "${POSTGRES_PASSWORD}"
-  dbname: "${POSTGRES_DB}"
-  port: 5432
+  host: "localhost"  # Default host; can be overridden by the environment variable POSTGRES_HOST
+  port: 5433         # Default port; can be overridden by the environment variable POSTGRES_PORT
+  name: "property_transactions_db"  # Default database name; can be overridden by the environment variable POSTGRES_DB
+
+data_path: "./data"
+
+batches:
+  range: [1, 4]
