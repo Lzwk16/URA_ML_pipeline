@@ -20,10 +20,6 @@ password = os.getenv('POSTGRES_PASSWORD')
 access_key = os.getenv('ACCESS_KEY')
 token = os.getenv('TOKEN')
 
-print(f"DB: {db_name}")
-print(f"User: {user_name}")
-print(f"Password: {password}")
-
 # Set up headers for the API request
 headers = {
     "AccessKey": access_key,
@@ -35,25 +31,24 @@ headers = {
 def fetch_data_for_batch(batch_no):
     """Fetch data from the API for a specific batch number."""
     api_url = api_url_base + str(batch_no)
-    response = requests.get(api_url, headers=headers, verify=True)
-
-    if response.status_code == 200:
-        try:
-            data = response.json()
-            results = data.get('Result', [])
-            if results:
-                print(f"Batch {batch_no} - Sample project data:", results[0])  # Print the first project
-                print(f"Batch {batch_no} - Sample transaction data:", results[0].get("transaction", []))  # Print first transaction
-            else:
-                print(f"Batch {batch_no}: No projects found in results")
-            return results
-        except ValueError as e:
-            print(f"Batch {batch_no}: Error parsing JSON:", e)
-            return []
-    else:
-        print(f"Batch {batch_no}: Error: Received status code {response.status_code}")
-        return []
-
+    
+    try:
+        response = requests.get(api_url, headers=headers, verify=True)
+        if response.status_code == 200:
+            try:
+                data = response.json()
+                results = data.get('Result', [])
+                if results:
+                    print(f"Batch {batch_no} - Sample project data:", results[0])  # Print the first project
+                    print(f"Batch {batch_no} - Sample transaction data:", results[0].get("transaction", []))  # Print first transaction
+                else:
+                    print(f"Batch {batch_no}: No projects found in results")
+                return results
+            except ValueError as e:
+                raise RuntimeError(f"Batch {batch_no}: Error parsing JSON: {e}")
+    
+    except requests.RequestException as e:
+        raise ConnectionError(f"Batch {batch_no}: Request failed: {e}")
 
 def insert_data_into_db(results):
     """Insert project and transaction data into the PostgreSQL database."""
@@ -67,8 +62,7 @@ def insert_data_into_db(results):
         )
         print("Connected to the PostgreSQL database!")
     except psycopg2.Error as e:
-        print(f"Unable to connect to the database: {e}")
-        return
+        raise ConnectionError(f"Unable to connect to the database: {e}")
 
     cursor = conn.cursor()
 
@@ -133,7 +127,7 @@ def insert_data_into_db(results):
     conn.close()
 
 
-def main():
+def run():
     """Main function to download data from all batches (1-4) and insert into the database."""
     for batch_no in range(1, 5):  # Loop through batch numbers 1 to 4
         print(f"Fetching data for batch {batch_no}...")
@@ -146,4 +140,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run()
