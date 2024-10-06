@@ -1,3 +1,3 @@
-from . import data_prep, database, model
+from . import data_prep, database, model, utils
 
-__all__ = ["database", "data_prep", "model"]
+__all__ = ["database", "data_prep", "model", "utils"]

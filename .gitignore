@@ -3,7 +3,7 @@ __pycache__/
 *.pyc
 .env
 postgres_data/
-data/
+data/**
 db-data/
 *.csv
 # Flask stuff:

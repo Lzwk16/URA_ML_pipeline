@@ -10,14 +10,15 @@ from dotenv import load_dotenv
 
 from ura_pipeline.utils import load_config
 
-sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
+# sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
+
 class DataScraper:
     """Fetch data from API and insert it into the PostgreSQL database."""
     
-    def __init__(self, config_file='config.yaml'):
+    def __init__(self, config_file):
+        
         # Load environment variables from .env file
         load_dotenv('.env')
-        
         self.config = load_config(config_file)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
@@ -27,11 +28,6 @@ class DataScraper:
             "User-Agent": self.config['ura_api']['user_agent'],
         }
     
-    def load_config(self, config_file):
-        """Load configuration from a YAML file."""
-        with open(config_file, 'r') as file:
-            self.config = yaml.safe_load(file)
-
     def fetch_data_for_batch(self, batch_no):
         """Fetch data from the API for a specific batch number."""
         api_url = f"{self.config['ura_api']['endpoint']}{batch_no}"
@@ -148,5 +144,7 @@ class DataScraper:
 
 if __name__ == "__main__":
     logging.info("Starting DataScraper...")
-    pipeline = DataScraper()
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    os.chdir(root)
+    pipeline = DataScraper("conf/base/config.yaml")
     pipeline.run()

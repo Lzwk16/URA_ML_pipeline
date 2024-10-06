@@ -7,7 +7,7 @@ database:
   port: 5433         # Default port; can be overridden by the environment variable POSTGRES_PORT
   name: "property_transactions_db"  # Default database name; can be overridden by the environment variable POSTGRES_DB
 
-data_path: "./data"
+data_path: "URA_ML_pipeline/data"
 
 batches:
   range: [1, 4]

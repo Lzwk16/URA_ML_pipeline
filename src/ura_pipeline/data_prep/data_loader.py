@@ -9,28 +9,24 @@ from dotenv import load_dotenv
 
 from ura_pipeline.utils import load_config
 
-sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
+
+# sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
 class DataLoader:
     """Fetch data from PostgreSQL database and save to CSV files."""
     
-    def __init__(self, config_file='config.yaml'):
+    def __init__(self, config_file):
+        
         # Load environment variables from .env file
         load_dotenv('.env')
-        
         self.config = load_config(config_file)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         # Set up the output directory for CSV files
-        self.output_dir = os.path.dirname(self.config['data_path'])
+        self.output_dir = self.config['data_path']
+        self.logger.info(f"Output directory: {self.output_dir}")
         if not os.path.exists(self.output_dir):
             self.logger.info(f"Creating directory at: {self.output_dir}")
             os.makedirs(self.output_dir)
-
-    def load_config(self, config_file):
-        """Load configuration from a YAML file."""
-        with open(config_file, 'r') as file:
-            self.config = yaml.safe_load(file)
-
     def connect_db(self):
         """Establish a connection to the PostgreSQL database."""
         try:
@@ -80,5 +76,8 @@ class DataLoader:
 
 if __name__ == "__main__":
     logging.info("Starting DataLoader...")
-    loader = DataLoader()
+    root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    os.chdir(root)
+    print(f"Current working directory: {os.getcwd()}")
+    loader = DataLoader("conf/base/config.yaml")
     loader.run()
