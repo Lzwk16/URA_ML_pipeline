@@ -8,6 +8,8 @@ import requests
 import yaml
 from dotenv import load_dotenv
 
+from ura_pipeline.utils import load_config
+
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
 class DataScraper:
     """Fetch data from API and insert it into the PostgreSQL database."""
@@ -16,7 +18,7 @@ class DataScraper:
         # Load environment variables from .env file
         load_dotenv('.env')
         
-        self.load_config(config_file)
+        self.config = load_config(config_file)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         self.headers = {

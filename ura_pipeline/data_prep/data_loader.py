@@ -7,6 +7,8 @@ import psycopg2
 import yaml
 from dotenv import load_dotenv
 
+from ura_pipeline.utils import load_config
+
 sys.path.append(f"{os.path.dirname(os.path.abspath(__file__))}/../")
 class DataLoader:
     """Fetch data from PostgreSQL database and save to CSV files."""
@@ -15,7 +17,7 @@ class DataLoader:
         # Load environment variables from .env file
         load_dotenv('.env')
         
-        self.load_config(config_file)
+        self.config = load_config(config_file)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
         # Set up the output directory for CSV files
