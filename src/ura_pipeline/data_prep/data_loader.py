@@ -21,9 +21,10 @@ class DataLoader:
         self.config = load_config(config_file)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
+        self.path = self.config['data']['data_path']
         
         # Set up the output directory for CSV files
-        self.output_dir = os.path.join(os.getcwd(), self.config['data_path'])
+        self.output_dir = os.path.join(os.getcwd(), self.path)
         self.logger.info(f"Output directory: {self.output_dir}")
         if not os.path.exists(self.output_dir):
             self.logger.info(f"Creating directory at: {self.output_dir}")

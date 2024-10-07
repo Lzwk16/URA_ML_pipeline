@@ -1,0 +1,13 @@
+model_cfg:
+  random_forest:
+    name: 'RF'
+    params:
+      random_state: 42
+      rgr__max_depth:
+      rgr__min_samples_leaf:
+      rgr__min_samples_split:
+      rgr__max_features:
+  scale_features:
+  encode_features:
+  cv: 5
+  scoring: 'neg_mean_squared_error'

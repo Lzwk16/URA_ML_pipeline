@@ -21,9 +21,10 @@ CREATE TABLE projects (
 CREATE TABLE private_property_transactions (
     id SERIAL PRIMARY KEY,
     project_id INT,                   -- Add the project_id column here 
-    transaction_date DATE,            -- Date of the transaction
+    transaction_date VARCHAR(50),     -- Date of the transaction in yyyy-mm
     area NUMERIC,                     -- Land/floor area in square meters
     price NUMERIC,                    -- Transacted price
+    nett_price NUMERIC,               -- Nett price
     property_type VARCHAR(100),       -- Type of the transacted property
     tenure VARCHAR(100),              -- Tenure of the property
     type_of_area VARCHAR(50),         -- Type of area (Strata, Land, Unknown)

@@ -93,17 +93,15 @@ class DataScraper:
                         for transaction in project["transaction"]:
                             month = transaction['contractDate'][:2]
                             year = "20" + transaction['contractDate'][2:]
-                            transaction_date = datetime.strptime(
-                                f"{year}-{month}-01", 
-                                "%Y-%m-%d"
-                            ).date()
+                            transaction_date = f"{year}-{month}"
 
                             cursor.execute("""
                                 INSERT INTO private_property_transactions (
                                     project_id, 
                                     transaction_date, 
                                     area, 
-                                    price, 
+                                    price,
+                                    nett_price, 
                                     property_type, 
                                     tenure, 
                                     type_of_area, 
@@ -112,12 +110,13 @@ class DataScraper:
                                     district, 
                                     no_of_units
                                 )
-                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                             """, (
                                 project_id,
                                 transaction_date,
                                 float(transaction['area']),
                                 float(transaction['price']),
+                                float(transaction.get('nettPrice', 0)),
                                 transaction['propertyType'],
                                 transaction['tenure'],
                                 transaction['typeOfArea'],

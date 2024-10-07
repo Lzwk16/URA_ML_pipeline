@@ -7,7 +7,29 @@ database:
   port: 5433         # Default port; can be overridden by the environment variable POSTGRES_PORT
   name: "property_transactions_db"  # Default database name; can be overridden by the environment variable POSTGRES_DB
 
-data_path: "data"
+data:
+  data_path: "data"
+  impute_cols: 
+    - "x_coordinate" 
+    - "y_coordinate"
+  KNNIMPUTER: 3
+  left_merge_key: 'project_id'
+  right_merge_key: 'id'
+  property:
+    column_name: 'property_type'
+    filter_property_type: 'Executive Condominium'
+  target_col: 'price'
+  drop_cols:
+    - 'project_id'
+    - 'tenure'
+    - 'street'
+    - 'nett_price'
+    - 'street'
+    - 'transaction_date'
+    - 'no_of_units'
+    - 'floor_range'
+    - 'property_type'
+    - 'project_name'
 
 batches:
   range: [1, 4]
