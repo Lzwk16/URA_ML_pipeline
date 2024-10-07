@@ -6,6 +6,7 @@ postgres_data/
 data/**
 db-data/
 *.csv
+*.log
 # Flask stuff:
 instance/
 .webassets-cache

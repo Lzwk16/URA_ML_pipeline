@@ -3,33 +3,35 @@ ura_api:
   user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
   verify_ssl: true
 database:
-  host: "localhost"  # Default host; can be overridden by the environment variable POSTGRES_HOST
-  port: 5433         # Default port; can be overridden by the environment variable POSTGRES_PORT
-  name: "property_transactions_db"  # Default database name; can be overridden by the environment variable POSTGRES_DB
+  host: "localhost" # Default host; can be overridden by the environment variable POSTGRES_HOST
+  port: 5433 # Default port; can be overridden by the environment variable POSTGRES_PORT
+  name: "property_transactions_db" # Default database name; can be overridden by the environment variable POSTGRES_DB
 
 data:
   data_path: "data"
-  impute_cols: 
-    - "x_coordinate" 
+  impute_cols:
+    - "x_coordinate"
     - "y_coordinate"
   KNNIMPUTER: 3
-  left_merge_key: 'project_id'
-  right_merge_key: 'id'
+  merge_strategy: "left"
+  foreign_key: "project_id"
+  primary_key: "id"
   property:
-    column_name: 'property_type'
-    filter_property_type: 'Executive Condominium'
-  target_col: 'price'
+    column_name: "property_type"
+    filter_property_type: "Executive Condominium"
+  target_col: "price"
   drop_cols:
-    - 'project_id'
-    - 'tenure'
-    - 'street'
-    - 'nett_price'
-    - 'street'
-    - 'transaction_date'
-    - 'no_of_units'
-    - 'floor_range'
-    - 'property_type'
-    - 'project_name'
+    - "project_id"
+    - "tenure"
+    - "street"
+    - "nett_price"
+    - "street"
+    - "transaction_date"
+    - "no_of_units"
+    - "floor_range"
+    - "property_type"
+    - "project_name"
+    - "type_of_area"
 
 batches:
   range: [1, 4]
