@@ -1,3 +1,9 @@
 from . import data_prep, database, model, utils
 
-__all__ = ["database", "data_prep", "model", "utils"]
+# Define the public interface of the package
+__all__ = [
+    "data_prep",
+    "database",
+    "model",
+    "utils",
+]

@@ -6,6 +6,8 @@ database:
   host: "localhost" # Default host; can be overridden by the environment variable POSTGRES_HOST
   port: 5433 # Default port; can be overridden by the environment variable POSTGRES_PORT
   name: "property_transactions_db" # Default database name; can be overridden by the environment variable POSTGRES_DB
+  projects_table_query: "SELECT * FROM projects;"
+  transactions_table_query: "SELECT * FROM private_property_transactions;"
 
 data:
   data_path: "data"
@@ -25,7 +27,6 @@ data:
     - "tenure"
     - "street"
     - "nett_price"
-    - "street"
     - "transaction_date"
     - "no_of_units"
     - "floor_range"

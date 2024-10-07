@@ -1,13 +1,22 @@
 model_cfg:
   random_forest:
-    name: 'RF'
+    name: "RF"
     params:
-      random_state: 42
-      rgr__max_depth:
-      rgr__min_samples_leaf:
-      rgr__min_samples_split:
-      rgr__max_features:
-  scale_features:
-  encode_features:
+      rf__max_depth: [3, 7, 13]
+      rf__min_samples_leaf: [3, 5, 10]
+      rf__min_samples_split: [2, 3, 7]
+      rf__max_features: ["sqrt", 6, 9]
+  multi_layer_perceptron:
+    name: "MLP"
+    params:
+      mlp__validation_fraction: [0.2]
+      mlp__hidden_layer_sizes: [(50, 50, 50), (50, 100, 50), (100, 1)]
+      mlp__activation: ["relu", "tanh", "logistic"]
+      mlp__learning_rate: ["constant", "adaptive"]
+      mlp__solver: ["adam"]
+  random_state: 42
+  scale_features: ["area", "middle_story", "remaining_lease"]
+  encode_features: ["market_segment"]
   cv: 5
-  scoring: 'neg_mean_squared_error'
+  scoring: "neg_mean_squared_error"
+  model_save_path: "models/weights/weights.pkl"
