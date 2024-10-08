@@ -51,7 +51,8 @@ $ python run src/main.py
 ```
 
 2. ## Data Model
-![alt text](data_model_diagram)
+![alt text](data_model_diagram.png)
+
 3. ## Folder Structure
 
 ```
