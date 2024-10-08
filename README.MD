@@ -50,8 +50,8 @@ training pipeline
 $ python run src/main.py
 ```
 
-2. ## Module directory and pipeline structure
-
+2. ## Data Model
+![alt text](data_model_diagram)
 3. ## Folder Structure
 
 ```
