@@ -78,9 +78,15 @@ docker run -p 5000:5000 ml-api
 5. ## Model Monitoring Metrics
 To ensure the model remains effective over time, propose the following monitoring metrics:
 
-a. Prediction Accuracy: Track the difference between predicted and actual prices (e.g., MAE, RMSE).
-b. Data Drift: Monitor changes in the input data distribution that could affect model performance.
-c. Model Performance Over Time: Analyze performance trends to detect degradation.
+a. Prediction Accuracy: Track the difference between predicted and actual prices
+(e.g., MAE, RMSE).
+
+b. Data Drift: Monitor changes in the input data distribution that could affect
+model performance.
+
+c. Model Performance Over Time: Analyze performance trends to detect
+degradation.
+
 d. Feature Importance Tracking: Regularly assess the importance of features to
 identify shifts.
 
@@ -89,9 +95,13 @@ identify shifts.
 To streamline automation processes, the following can be:
 
 a. **Feature Engineering Automation**:
-Use pipelines (e.g., Apache Airflow, Kedro) to automate data preprocessing and feature extraction.
+Use pipelines (e.g., Apache Airflow, Kedro) to automate data preprocessing and
+feature extraction.
+
 b. **Model Selection Automation**:
-Implement AutoML frameworks (e.g., TPOT, H2O.ai) to automate the selection and tuning of ML models based on validation performance.
+Implement AutoML frameworks (e.g., TPOT, H2O.ai) to automate the selection and
+tuning of ML models based on validation performance.
+
 c. **Model Monitoring Automation**:
 Set up automated alerts for performance metrics and data drift, allowing for timely model retraining.
 
@@ -100,10 +110,16 @@ Set up automated alerts for performance metrics and data drift, allowing for tim
 To ensure responsible use of the model, implement the following governance processes:
 
 a. **Access Controls**:
-Restrict access to model and data resources to authorized personnel only, utilizing role-based access control.
+Restrict access to model and data resources to authorized personnel only,
+utilizing role-based access control.
+
 b. **Versioning Models**:
-Use model versioning systems (e.g., MLflow) to manage different iterations of the model and facilitate rollback if needed.
+Use model versioning systems (e.g., MLflow) to manage different iterations of
+the model and facilitate rollback if needed.
+
 c. **Testing for Model Bias**:
-Regularly test the model for bias using fairness metrics and techniques to ensure equitable performance across different demographic groups.
+Regularly test the model for bias using fairness metrics and techniques to
+ensure equitable performance across different demographic groups.
+
 d. **Documentation**:
 Maintain thorough documentation of the model development process, data sources, and evaluation metrics to promote transparency.
