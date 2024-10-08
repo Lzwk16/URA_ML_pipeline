@@ -70,10 +70,20 @@ $ python run src/main.py
 4. ## Python API for model prediction
 To expose the model as a RESTful service a docker container, run the following
 docker command while in the root directory:
+
 ```bash
-docker build -t ml-api .
-docker run -p 5000:5000 ml-api
+docker build -t ml-model-api -f ura.Dockerfile .
+docker run -d -p 8080:8080 ml-model-api
 ```
+
+Once done, you can perform predictions by sending a POST request using `curl`
+command in the terminal with the following format:
+```bash
+curl -X POST http://127.0.0.1:8080/predict \
+-H "Content-Type: application/json" \
+-d '{"area": 120, "type_of_sale": 3, "district": 20, "market_segment": "OCR", "x_coordinate": 30143.47773, "y_coordinate": 36550.59541, "year": 2021, "month": "01", "remaining_lease": 76, "middle_story": 5}'
+```
+
 
 5. ## Model Monitoring Metrics
 To ensure the model remains effective over time, propose the following monitoring metrics:
