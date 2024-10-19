@@ -6,14 +6,15 @@ import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+# pylint: disable=no-name-in-module
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import root_mean_squared_error
 from sklearn.model_selection import GridSearchCV
 from sklearn.neural_network import MLPRegressor
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
-from xgboost import XGBRegressor
 
 from src.ura_pipeline.utils import load_config
 
@@ -23,7 +24,6 @@ class ModelTrainer:
         self.config_file = load_config(config_file)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
-        self.model = RandomForestRegressor  # pending adjustment
         self.scale_features = self.config_file["model_cfg"]["scale_features"]
         self.encode_features = self.config_file["model_cfg"]["encode_features"]
         self.model_params_dict = self.config_file["model_cfg"]
@@ -186,7 +186,7 @@ class ModelTrainer:
         y_pred = trained_model.predict(X_test)
 
         # Calculate evaluation metrics for best model
-        rmse = mean_squared_error(y_test, y_pred, squared=False)
+        rmse = root_mean_squared_error(y_test, y_pred)
 
         # Save the best model
         model_weights_dir = os.path.dirname(self.model_save_path)

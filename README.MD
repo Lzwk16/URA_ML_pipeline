@@ -47,7 +47,7 @@ $ docker-compose up -d
 1.3.3  Run the following command to trigger the data processing and model
 training pipeline
 ```bash
-$ python run src/main.py
+$ python src/main.py
 ```
 
 2. ## Data Model
