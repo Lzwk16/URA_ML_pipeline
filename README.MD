@@ -68,9 +68,9 @@ $ python run src/main.py
 │   └───main.py          <- main.py for labeling reports.
 ├───ura.yml     <- `conda` environment file for reproducing the project.
 ├───app.py      <- app.py file for exposing model as RESTful service
-├───docker-compose.yml <- config file to spin up docker container to set up SQL database
-├───requirements.txt <- environment file used by app.py to expose model as RESTful service
-├───ura.Dockerfile <- docker file to expose model as RESTful service
+├───docker-compose.yml     <- config file to spin up docker container to set up SQL database
+├───requirements.txt       <- environment file used by app.py to expose model as RESTful service
+├───ura.Dockerfile         <- docker file to expose model as RESTful service
 ```
 4. ## Python API for model prediction
 To expose the model as a RESTful service a docker container, run the following
