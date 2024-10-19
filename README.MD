@@ -25,7 +25,7 @@ commmands:
 $ cd folder/to/clone/into
 $ gh repo clone Lzwk16/URA_ML_pipeline
 $ cd URA_ML_pipeline
-$ conda env create --file=ura.yml
+$ conda env create --file=ura.yaml
 ```
 1.3 **Running the module**:
 1.3.1 Ensure relavant variables is in a `.env` file inside `URA_ML_pipeline`
@@ -56,18 +56,18 @@ $ python run src/main.py
 3. ## Folder Structure
 
 ```
-├───conf                 <- config files.
+├───conf                   <- config files.
 │   └───base
-├───notebooks            <- notebook for exploration.
+├───notebooks              <- notebook for exploration.
 ├───src
-│   ├───ura_pipeline     <- main entrypoint for all modules.
+│   ├───ura_pipeline       <- main entrypoint for all modules.
 │   │   ├───data_prep
 │   │   ├───database
 │   │   ├───model
 │   ├───tests
-│   └───main.py          <- main.py for labeling reports.
-├───ura.yml     <- `conda` environment file for reproducing the project.
-├───app.py      <- app.py file for exposing model as RESTful service
+│   └───main.py            <- main.py for labeling reports.
+├───ura.yml                <- `conda` environment file for reproducing the project.
+├───app.py                 <- app.py file for exposing model as RESTful service
 ├───docker-compose.yml     <- config file to spin up docker container to set up SQL database
 ├───requirements.txt       <- environment file used by app.py to expose model as RESTful service
 ├───ura.Dockerfile         <- docker file to expose model as RESTful service
