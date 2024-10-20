@@ -66,11 +66,12 @@ flowchart TD
       direction TB
       A --> B[Scrape Data from API]
       B --> C[Query data from database]
-      C --> D[Clean and process raw data]
+      C --> G[(CSV Files)]
+      G[(CSV Files)] --> D[Clean and process raw data]
       D --> E[Train ML Model]
    end
    
-   C --> G[(CSV Files)]
+   
    F[(URA API)] --> B
    G[(CSV Files)] --> D
    E --> H[(Trained Model weights)]
