@@ -53,6 +53,31 @@ $ python src/main.py
 2. ## Data Model
 ![alt text](data_model_diagram.png)
 
+2.1 **Data Pipeline**
+flowchart TD
+   subgraph Docker Container
+   direction TB
+      A[Spin-up Isolated Docker Container] 
+   end
+
+   A --> B[DataScraper:\nScrape Data from API]
+   B --> C[DataLoader:\nLoad Data into CSV Files]
+   C --> D[DataProcessor:\nProcess Data for Model Training]
+   D --> E[ModelTrainer:\nTrain Machine Learning Model]
+
+   subgraph main.py
+      direction TB
+      A --> B
+      B --> C
+      C --> D
+      D --> E
+   end
+   
+   F[(API)] --> B
+   G[(CSV Files)] --> D
+   H[(Trained Model)] --> E
+
+
 3. ## Folder Structure
 
 ```
