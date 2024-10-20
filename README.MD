@@ -62,17 +62,12 @@ flowchart TD
       A[Spin-up Isolated Docker Container] 
    end
 
-   A --> B[DataScraper:\nScrape Data from API]
-   B --> C[DataLoader:\nLoad Data into CSV Files]
-   C --> D[DataProcessor:\nProcess Data for Model Training]
-   D --> E[ModelTrainer:\nTrain Machine Learning Model]
-
    subgraph main.py
       direction TB
-      A --> B
-      B --> C
-      C --> D
-      D --> E
+      A --> B[DataScraper:Scrape Data from API]
+      B --> C[DataLoader: Load Data into CSV Files]
+      C --> D[DataProcessor: Clean and process raw data]
+      D --> E[ModelTrainer: Train ML Model]
    end
    
    F[(API)] --> B
