@@ -53,26 +53,33 @@ $ python src/main.py
 2. ## Data Model
 ![alt text](data_model_diagram.png)
 
-2.1 **Data Pipeline**
+2.1 **Data and Model API Pipeline**
 
 ```mermaid
 flowchart TD
-   subgraph Docker Container
+   subgraph PostgresSQL Docker Container
    direction TB
       A[Spin-up Isolated Docker Container] 
    end
 
    subgraph main.py
       direction TB
-      A --> B[DataScraper:Scrape Data from API]
-      B --> C[DataLoader: Load Data into CSV Files]
-      C --> D[DataProcessor: Clean and process raw data]
-      D --> E[ModelTrainer: Train ML Model]
+      A --> B[Scrape Data from API]
+      B --> C[Query data from database]
+      C --> D[Clean and process raw data]
+      D --> E[Train ML Model]
    end
    
-   F[(API)] --> B
+   C --> G[(CSV Files)]
+   F[(URA API)] --> B
    G[(CSV Files)] --> D
-   H[(Trained Model)] --> E
+   E --> H[(Trained Model weights)]
+
+   subgraph Python API
+   direction TB
+      H[(Trained Model weights)] --> I[(API Docker Container)]
+      I[(API Docker Container)] --> J[Request Prediction]
+   end
 ```
 
 3. ## Folder Structure
