@@ -71,9 +71,7 @@ flowchart TD
       D --> E[Train ML Model]
    end
    
-   
    F[(URA API)] --> B
-   G[(CSV Files)] --> D
    E --> H[(Trained Model weights)]
 
    subgraph Python API
