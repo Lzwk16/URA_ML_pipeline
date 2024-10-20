@@ -54,6 +54,8 @@ $ python src/main.py
 ![alt text](data_model_diagram.png)
 
 2.1 **Data Pipeline**
+
+```mermaid
 flowchart TD
    subgraph Docker Container
    direction TB
@@ -76,7 +78,7 @@ flowchart TD
    F[(API)] --> B
    G[(CSV Files)] --> D
    H[(Trained Model)] --> E
-
+```
 
 3. ## Folder Structure
 
