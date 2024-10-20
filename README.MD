@@ -125,10 +125,10 @@ a. Prediction Accuracy: Track the difference between predicted and actual prices
 (e.g., MAE, RMSE).
 
 b. Data Drift: Monitor changes in the input data distribution that could affect
-model performance.
+model performance (e.g. whylogs).
 
 c. Model Performance Over Time: Analyze performance trends to detect
-degradation.
+degradation (e.g. whylogs).
 
 d. Feature Importance Tracking: Regularly assess the importance of features to
 identify shifts.
@@ -162,7 +162,7 @@ the model and facilitate rollback if needed.
 
 c. **Testing for Model Bias**:
 Regularly test the model for bias using fairness metrics and techniques to
-ensure equitable performance across different demographic groups.
+ensure no geographical bias exists.
 
 d. **Documentation**:
 Maintain thorough documentation of the model development process, data sources, and evaluation metrics to promote transparency.
