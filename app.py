@@ -1,4 +1,5 @@
 import joblib
+import numpy as np
 import pandas as pd
 from flask import Flask, jsonify, request
 
@@ -20,7 +21,7 @@ def predict():
         prediction = model.predict(input_df)
 
         # Send the prediction as a response
-        return jsonify({"prediction": prediction.tolist()})
+        return jsonify({"prediction": np.round(prediction, 3).tolist()})
 
     except Exception as e:
         return jsonify({"error": str(e)})
