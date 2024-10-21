@@ -53,6 +53,33 @@ $ python src/main.py
 2. ## Data Model
 ![alt text](data_model_diagram.png)
 
+2.1 **Data and Model API Pipeline**
+
+```mermaid
+flowchart TD
+   subgraph PostgresSQL Docker Container
+   direction TB
+      A[Spin-up Isolated Container] 
+   end
+
+   subgraph main.py
+      direction TB
+      A --> B[Scrape Data from API]
+      B --> C[Query data from database]
+      C --> G[(CSV Files)]
+      G[(CSV Files)] --> D[Clean and process raw data]
+      D --> E[Train ML Model]
+   end
+   
+   F[(URA API)] --> B
+   H[(Trained Model weights)] --> I[(API Docker Container)]
+
+   subgraph Python API
+   direction TB
+      I[(API Docker Container)] --> J[Request Prediction]
+   end
+```
+
 3. ## Folder Structure
 
 ```
@@ -97,10 +124,10 @@ a. Prediction Accuracy: Track the difference between predicted and actual prices
 (e.g., MAE, RMSE).
 
 b. Data Drift: Monitor changes in the input data distribution that could affect
-model performance.
+model performance (e.g. whylogs).
 
 c. Model Performance Over Time: Analyze performance trends to detect
-degradation.
+degradation (e.g. whylogs).
 
 d. Feature Importance Tracking: Regularly assess the importance of features to
 identify shifts.
@@ -134,7 +161,7 @@ the model and facilitate rollback if needed.
 
 c. **Testing for Model Bias**:
 Regularly test the model for bias using fairness metrics and techniques to
-ensure equitable performance across different demographic groups.
+ensure no geographical bias exists.
 
 d. **Documentation**:
 Maintain thorough documentation of the model development process, data sources, and evaluation metrics to promote transparency.
