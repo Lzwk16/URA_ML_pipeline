@@ -59,7 +59,7 @@ $ python src/main.py
 flowchart TD
    subgraph PostgresSQL Docker Container
    direction TB
-      A[Spin-up Isolated Docker Container] 
+      A[Spin-up Isolated Container] 
    end
 
    subgraph main.py
