@@ -72,11 +72,10 @@ flowchart TD
    end
    
    F[(URA API)] --> B
-   E --> H[(Trained Model weights)]
+   H[(Trained Model weights)] --> I[(API Docker Container)]
 
    subgraph Python API
    direction TB
-      H[(Trained Model weights)] --> I[(API Docker Container)]
       I[(API Docker Container)] --> J[Request Prediction]
    end
 ```
