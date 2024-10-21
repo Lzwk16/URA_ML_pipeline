@@ -1,4 +1,4 @@
--- Check if the 'projects' table exists and create it if it doesn't
+-- Create projects table if it doesn't exist
 DO
 $$
 BEGIN
@@ -15,7 +15,7 @@ BEGIN
 END
 $$;
 
--- Check if the 'private_property_transactions' table exists and create it if it doesn't
+-- Create transactions table if it doesn't exist
 DO
 $$
 BEGIN
