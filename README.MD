@@ -108,13 +108,10 @@ docker build -t ml-model-api -f ura.Dockerfile .
 docker run -d -p 8080:8080 ml-model-api
 ```
 
-Once done, you can perform predictions by sending a POST request using `curl`
-command in the terminal with the following format:
-```bash
-curl -X POST http://127.0.0.1:8080/predict \
--H "Content-Type: application/json" \
--d '{"area": 120, "type_of_sale": 3, "district": 20, "market_segment": "OCR", "x_coordinate": 30143.47773, "y_coordinate": 36550.59541, "year": 2021, "month": "01", "remaining_lease": 76, "middle_story": 5}'
-```
+Once done, proceed to open a new browser page, input
+`http://127.0.0.1:8080/docs` into the URL, and enter input parameters similarly as shown in this example format:
+
+![alt text](URA_API_Predictor.png)
 
 
 5. ## Model Monitoring Metrics

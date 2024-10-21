@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code into the container
 COPY . /app/
 
-# Expose port 8080 for Flask
+# Expose port 8080 for API
 EXPOSE 8080
 
-# Command to run your Flask application
-CMD ["python", "app.py"]
+# Command to run your API application
+CMD ["uvicorn", "api_app:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
