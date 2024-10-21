@@ -6,8 +6,12 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 app = FastAPI(
-    title="Property Prediction API",
-    description="API for predicting property values based on various parameters.",
+    title="URA Property Value Predictor",
+    summary="API for predicting private property values based on various parameters",
+    description=(
+        "Version is currently only trained to predict prices for Executive "
+        "Condominium units."
+    ),
     version="1.0.0",
 )
 
