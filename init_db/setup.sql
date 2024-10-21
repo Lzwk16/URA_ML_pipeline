@@ -1,36 +1,41 @@
+-- Check if the 'projects' table exists and create it if it doesn't
 DO
 $$
 BEGIN
-   IF NOT EXISTS (SELECT FROM pg_database WHERE datname = 'property_transactions_db') THEN
-      CREATE DATABASE property_transactions_db;
+   IF NOT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'projects') THEN
+      CREATE TABLE projects (
+          id SERIAL PRIMARY KEY,
+          project_name VARCHAR(100),
+          market_segment VARCHAR(50),
+          street VARCHAR(255),
+          x_coordinate NUMERIC,
+          y_coordinate NUMERIC
+      );
    END IF;
 END
 $$;
 
-\c property_transactions_db
-
-CREATE TABLE projects (
-    id SERIAL PRIMARY KEY,
-    project_name VARCHAR(100),
-    market_segment VARCHAR(50),
-    street VARCHAR(255),             -- Market segment (e.g., CCR, RCR, OCR)
-    x_coordinate NUMERIC,
-    y_coordinate NUMERIC
-);
-
-CREATE TABLE private_property_transactions (
-    id SERIAL PRIMARY KEY,
-    project_id INT,                   -- Add the project_id column here 
-    transaction_date VARCHAR(50),     -- Date of the transaction in yyyy-mm
-    area NUMERIC,                     -- Land/floor area in square meters
-    price NUMERIC,                    -- Transacted price
-    nett_price NUMERIC,               -- Nett price
-    property_type VARCHAR(100),       -- Type of the transacted property
-    tenure VARCHAR(100),              -- Tenure of the property
-    type_of_area VARCHAR(50),         -- Type of area (Strata, Land, Unknown)
-    floor_range VARCHAR(50),          -- Floor range of the transacted unit
-    type_of_sale VARCHAR(50),         -- Type of sale (1 - New Sale, 2 - Sub Sale, 3 - Resale)
-    district VARCHAR(10),             -- Postal district
-    no_of_units INT,                  -- Number of units in the transaction
-    FOREIGN KEY (project_id) REFERENCES projects(id)
-);
+-- Check if the 'private_property_transactions' table exists and create it if it doesn't
+DO
+$$
+BEGIN
+   IF NOT EXISTS (SELECT FROM information_schema.tables WHERE table_name = 'private_property_transactions') THEN
+      CREATE TABLE private_property_transactions (
+          id SERIAL PRIMARY KEY,
+          project_id INT,
+          transaction_date VARCHAR(50),
+          area NUMERIC,
+          price NUMERIC,
+          nett_price NUMERIC,
+          property_type VARCHAR(100),
+          tenure VARCHAR(100),
+          type_of_area VARCHAR(50),
+          floor_range VARCHAR(50),
+          type_of_sale VARCHAR(50),
+          district VARCHAR(10),
+          no_of_units INT,
+          FOREIGN KEY (project_id) REFERENCES projects(id)
+      );
+   END IF;
+END
+$$;
