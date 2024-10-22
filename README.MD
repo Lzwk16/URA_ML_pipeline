@@ -94,7 +94,7 @@ flowchart TD
 │   ├───tests
 │   └───main.py            <- main.py for labeling reports.
 ├───ura.yml                <- `conda` environment file for reproducing the project.
-├───api_app.py                 <- app.py file for exposing model as RESTful service
+├───api_app.py             <- api app file for exposing model as RESTful service
 ├───docker-compose.yml     <- config file to spin up docker container to set up SQL database
 ├───requirements.txt       <- environment file used by app.py to expose model as RESTful service
 ├───ura.Dockerfile         <- docker file to expose model as RESTful service
