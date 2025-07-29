@@ -29,7 +29,7 @@ $ conda env create --file=ura.yaml
 ```
 1.3 **Running the module**:
 1.3.1 Ensure relavant variables is in a `.env` file inside `URA_ML_pipeline`
-   folder. Refer to the link to obtain the unique keys for the `ACCESS_KEY` and `TOKEN` [variables.](https://www.ura.gov.sg/maps/api/#private-residential-property-transactions)
+   folder. Refer to the link to obtain the unique keys for the `ACCESS_KEY` and `TOKEN` [variables.](https://www.developer.tech.gov.sg/products/categories/data-and-apis/ura-apis/getting-started)
 ```python
 
 # required environment variable in .env file
